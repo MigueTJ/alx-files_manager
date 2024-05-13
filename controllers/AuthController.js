@@ -5,31 +5,35 @@ const userUtils = require('../utils/user');
 const dbClient = require('../utils/db');
 
 class AuthController {
-	static async getConnect(request, response) {
-		const Authorixation = request.header('Authorization') || '';
-		const credentials = Authorization.split(' ')[1];
+  static async getConnect (request, response) {
+    const Authorization = request.header('Authorization') || '';
+    const credentials = Authorization.split(' ')[1];
 
-		if (!credentials) return response.status(401).send({ error: 'Unauthorized' });
+    if (!credentials) return response.status(401).send({ error: 'Unauthorized' });
 
-		const [email, password] = Buffer.from(credentials, 'base64').toString('utf-8').split(':');
+    const [email, password] = Buffer.from(credentials, 'base64').toString('utf-8').split(':');
 
-		if (!email || !password)  return response.status(401).send({ error: 'Unauthorized' });
+    if (!email || !password) return response.status(401).send({ error: 'Unauthorized' });
 
-		const usersCollection = await dbClient.usersCollection();
-		const user = await usersCollection.findOne({ email, password: sha1(password) });
+    const usersCollection = await dbClient.usersCollection();
+    const user = await usersCollection.findOne({ email, password: sha1(password) });
 
-		return response.status(200).send({ token });
-	}
+    if (!user) return response.status(401).send({ error: 'Unauthorized' });
+    const token = uuid.v4();
 
-	static async getDisconnect(request, response) {
-		const { userId, key } = await userUtils.getUserIdAndKey(request);
+    await redisClient.set(`auth_${token}`, user._id.toString(), 24 * 3600);
+    return response.status(200).send({ token });
+  }
 
-		if (!userId) return response.status(401).send({ error: 'Unauthorized' });
+  static async getDisconnect (request, response) {
+    const { userId, key } = await userUtils.getUserIdAndKey(request);
 
-		await redisClient.del(key);
+    if (!userId) return response.status(401).send({ error: 'Unauthorized' });
 
-		return response.status(204).send();
-	}
+    await redisClient.del(key);
+
+    return response.status(204).send();
+  }
 }
 
 module.exports = AuthController;
