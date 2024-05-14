@@ -2,7 +2,7 @@ const redisClient = require('./redis');
 const dbClient = require('./db');
 
 const userUtils = {
-  async getUserIdAndKey (request) {
+  async getUserIdAndKey(request) {
     const obj = { userId: null, key: null };
 
     const xToken = request.header('X-Token');
@@ -16,10 +16,10 @@ const userUtils = {
     return obj;
   },
 
-  async getUser (query) {
+  async getUser(query) {
     const user = await dbClient.usersCollection.findOne(query);
     return user;
-  }
+  },
 };
 
 module.exports = userUtils;

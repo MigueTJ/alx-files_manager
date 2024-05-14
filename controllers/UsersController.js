@@ -7,7 +7,7 @@ const User = require('../utils/user');
 const userQueue = new Queue('sending email');
 
 class UsersController {
-  static async postNew (req, res) {
+  static async postNew(req, res) {
     const { email, password } = req.body;
 
     if (!email) {
@@ -34,7 +34,7 @@ class UsersController {
     return res.status(201).json({ email, id: userId });
   }
 
-  static async getMe (request, response) {
+  static async getMe(request, response) {
     const { userId, key } = await User.getUserIdAndKey(request);
 
     if (!key) {
@@ -42,7 +42,7 @@ class UsersController {
     }
 
     const user = await User.getUser({
-      _id: ObjectId(userId)
+      _id: ObjectId(userId),
     });
 
     if (!user) {
