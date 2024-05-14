@@ -17,8 +17,13 @@ const userUtils = {
   },
 
   async getUser(query) {
-    const user = await dbClient.usersCollection.findOne(query);
-    return user;
+    try {
+      const user = await dbClient.usersCollection.findOne(query);
+      return user;
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      throw error;
+    }
   },
 };
 
