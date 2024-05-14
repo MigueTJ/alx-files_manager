@@ -26,7 +26,7 @@ fileQueue.process(async (job) => {
 
   const file = await fileUtils.getFile({
     _id: ObjectId(fileId),
-    userId: ObjectId(userId),
+    userId: ObjectId(userId)
   });
 
   if (!file) throw new Error('File not found');
@@ -57,7 +57,7 @@ userQueue.process(async (job) => {
   if (!basicUtils.isValidId(userId)) throw new Error('User not found');
 
   const user = await userUtils.getUser({
-    _id: ObjectId(userId),
+    _id: ObjectId(userId)
   });
 
   if (!user) throw new Error('User not found');
