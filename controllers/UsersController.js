@@ -55,7 +55,7 @@ class UsersController {
         return response.status(401).send({ error: 'Unauthorized' });
       }
   
-      const processedUser = { id: user._id,...user };
+      const processedUser = { id: user._id, ...user };
       delete processedUser._id;
       delete processedUser.password;
   
