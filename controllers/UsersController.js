@@ -3,6 +3,7 @@ const sha1 = require('sha1');
 const Queue = require('bull');
 const dbClient = require('../utils/db');
 const User = require('../utils/user');
+const crypto = require('crypto');
 
 const userQueue = new Queue('sending email');
 
@@ -26,7 +27,7 @@ class UsersController {
         return res.status(400).json({ error: 'Already exist' });
       }
 
-      const hashedPass = sha1(password);
+      const hashedPass = crypto.createHash('sha1').update(password).digest('hex');
 
       const insertionInfo = await usersCollection.insertOne({ email, password: hashedPass });
       const userId = insertionInfo.insertedId.toString();
