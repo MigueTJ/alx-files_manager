@@ -19,8 +19,7 @@ class UsersController {
         return res.status(400).json({ error: 'Missing password' });
       }
   
-      const usersCollection = await dbClient.usersCollection();
-      const emailExists = await usersCollection.findOne({ email });
+      const emailExists = await (await dbClient.usersCollection()).findOne({ email });
   
       if (emailExists) {
         return res.status(400).json({ error: 'Already exist' });
@@ -28,7 +27,8 @@ class UsersController {
   
       const hashedPass = sha1(password);
   
-      const insertionInfo = await usersCollection.insertOne({ email, password: hashedPass });
+      const insertionInfo = await (await dbClient.usersCollection())
+        .insertOne({ email, password: hashedPass });
       const userId = insertionInfo.insertedId.toString();
   
       userQueue.add({ userId });
@@ -55,7 +55,7 @@ class UsersController {
         return response.status(401).send({ error: 'Unauthorized' });
       }
   
-      const processedUser = { id: user._id,...user };
+      const processedUser = { id: user._id, ...user };
       delete processedUser._id;
       delete processedUser.password;
   

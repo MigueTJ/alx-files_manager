@@ -18,8 +18,7 @@ const userUtils = {
 
   async getUser(query) {
     try {
-      const usersCollection = await dbClient.usersCollection();
-      const user = await usersCollection.findOne(query);
+      const user = await dbClient.usersCollection.findOne(query);
       return user;
     } catch (error) {
       console.error('Error fetching user:', error);
