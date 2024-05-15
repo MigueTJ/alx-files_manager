@@ -5,7 +5,7 @@ const userUtils = {
   async getUserIdAndKey(request) {
     const obj = { userId: null, key: null };
 
-    const xToken = request.header('X-Token');
+    const xToken = request.headers('X-Token');
 
     if (!xToken) return obj;
 
