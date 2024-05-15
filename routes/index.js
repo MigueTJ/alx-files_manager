@@ -4,7 +4,7 @@ const UsersController = require('../controllers/UsersController');
 const AuthController = require('../controllers/AuthController');
 const FilesController = require('../controllers/FilesController');
 
-function routingControl(app) {
+function routingControl (app) {
   const router = express.Router();
   app.use('/', router);
 
